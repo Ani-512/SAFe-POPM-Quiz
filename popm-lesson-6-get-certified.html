@@ -168,7 +168,7 @@
   <div class="tbar-wrap"><div class="tbar" id="tbar"></div></div>
   <div class="qwrap">
     <div class="qcount" id="q-count">QUESTION 1</div>
-    <div class="qtimer" id="q-timer">20</div>
+    <div class="qtimer" id="q-timer">30</div>
     <div class="qtext" id="q-text"></div>
     <div class="answers" id="q-answers"></div>
   </div>
@@ -256,7 +256,7 @@ const API = "https://api.jsonbin.io/v3/b/";
 const LESSON = {"id": 6, "title": "Get Certified", "icon": "🎓", "color": "#1abc9c", "draw": 10, "questions": [{"q": "Where do you access your path to SAFe certification?", "answers": ["Only through your instructor by email", "Your Learning Plan in SAFe Studio", "A third-party exam site", "The public SAFe website homepage"], "correct": 1, "explanation": "The Learning Plan in SAFe Studio is your path to certification — download the workbook, give feedback, and access preparation materials.", "qid": "L6Q0"}, {"q": "What does attending this course give learners access to?", "answers": ["A free SAFe consulting engagement", "The SAFe Product Owner/Product Manager exam and related preparation materials", "Lifetime SPC certification", "A guaranteed pass on the exam"], "correct": 1, "explanation": "Attending the course gives learners access to the SAFe POPM exam and related preparation materials.", "qid": "L6Q1"}, {"q": "Why is completing the course feedback survey important?", "answers": ["It is required to pass the exam", "Results are used to improve courses and help instructors improve (and remain anonymous to the instructor)", "It unlocks the workbook", "It sets your exam date"], "correct": 1, "explanation": "Survey results improve courses and help instructors; feedback remains anonymous to the instructor.", "qid": "L6Q2"}, {"q": "What is SAFe Connect described as?", "answers": ["An exam proctoring service", "Your professional 'neighborhood' — a global network of certified peers with role-based events and content", "A billing portal", "A code repository"], "correct": 1, "explanation": "SAFe Connect is your professional neighborhood: role-based events, community discussions, a global network of 2M+ peers, and renewal PDUs.", "qid": "L6Q3"}, {"q": "According to the course, what is a benefit of getting SAFe certified?", "answers": ["It guarantees a promotion", "Certified professionals tend to earn more and advance faster, with access to role-specific tools", "It removes the need for further learning", "It is only useful for developers"], "correct": 1, "explanation": "Certification is positioned to advance careers — certified professionals earn more and advance faster — with role-specific tools in SAFe Studio.", "qid": "L6Q4"}, {"q": "Which resource is an AI assistant available in SAFe Studio?", "answers": ["SAFe CoPilot", "SAFe Ledger", "SAFe Compiler", "SAFe Tracker"], "correct": 0, "explanation": "SAFe CoPilot is the AI assistant among SAFe Studio resources, alongside SAFe Connect, workshops/toolkits/guides, and SAFe Skills.", "qid": "L6Q5"}, {"q": "What is a good practice when making a certification plan with your group?", "answers": ["Study alone and avoid accountability", "Decide how to fit exam prep into your schedule, hold each other accountable, and plan to celebrate", "Skip the preparation materials", "Take the exam immediately with no prep"], "correct": 1, "explanation": "The activity asks groups to plan how to fit prep into their schedule, support and hold each other accountable, and celebrate the achievement.", "qid": "L6Q6"}, {"q": "How can members earn renewal PDUs through SAFe Connect?", "answers": ["By re-taking the course", "Through continuous learning via member-driven content and community participation", "Only by attending in-person conferences", "PDUs cannot be earned via SAFe Connect"], "correct": 1, "explanation": "SAFe Connect enables earning renewal PDUs through continuous learning and member-driven content.", "qid": "L6Q7"}, {"q": "Which best reflects the course's closing message?", "answers": ["Work harder, not smarter", "Work differently, build the future", "Certification is the end of the journey", "AI replaces the need for Agile"], "correct": 1, "explanation": "The course closes with 'Work differently, build the future.'", "qid": "L6Q8"}, {"q": "After completing the feedback survey, what should you do next?", "answers": ["Wait for the instructor to schedule your exam", "Review the rest of the certification prep materials and make a certification plan", "Delete your Learning Plan", "Immediately renew your certification"], "correct": 1, "explanation": "After the survey, review the remaining certification prep materials and build a certification plan with your group.", "qid": "L6Q9"}]};
 const LS_KEY = "safe_lb_L" + LESSON.id;
 
-let deck=[], qi=0, score=0, correct=0, timeLeft=20, timer=null, answered=false;
+let deck=[], qi=0, score=0, correct=0, timeLeft=30, timer=null, answered=false;
 let playerName="", myId="", myEntry=null, myStats={}, pollTimer=null;
 let aggCache={scores:[],stats:{}}, lastOk=false, interDone=false, interTimer=null;
 
@@ -331,13 +331,13 @@ function render(){
   document.getElementById('q-answers').innerHTML=item.opts.map((o,i)=>`<button class="abtn ${cls[i]}" onclick="pick(${i})"><span class="shape">${shapes[i]}</span>${esc(o.t)}</button>`).join('');
   answered=false;startTimer();
 }
-function startTimer(){timeLeft=20;paintTimer();clearInterval(timer);timer=setInterval(()=>{timeLeft--;paintTimer();if(timeLeft<=0){clearInterval(timer);timeUp();}},1000);}
-function paintTimer(){const pct=(timeLeft/20)*100,bar=document.getElementById('tbar'),n=document.getElementById('q-timer');bar.style.width=pct+'%';bar.className='tbar'+(timeLeft<=5?' urgent':'');n.textContent=timeLeft;n.style.color=timeLeft<=5?'var(--accent)':'var(--yellow)';}
+function startTimer(){timeLeft=30;paintTimer();clearInterval(timer);timer=setInterval(()=>{timeLeft--;paintTimer();if(timeLeft<=0){clearInterval(timer);timeUp();}},1000);}
+function paintTimer(){const pct=(timeLeft/30)*100,bar=document.getElementById('tbar'),n=document.getElementById('q-timer');bar.style.width=pct+'%';bar.className='tbar'+(timeLeft<=5?' urgent':'');n.textContent=timeLeft;n.style.color=timeLeft<=5?'var(--accent)':'var(--yellow)';}
 function record(ok){const item=deck[qi];myStats[item.qid]={seen:1,correct:ok?1:0};lastOk=ok;}
 function pick(i){
   if(answered)return;answered=true;clearInterval(timer);
   const item=deck[qi],btns=document.querySelectorAll('.abtn');btns.forEach(b=>b.disabled=true);
-  const ok=i===item.correct;const pts=ok?Math.round(500+(timeLeft/20)*500):0;
+  const ok=i===item.correct;const pts=ok?Math.round(500+(timeLeft/30)*500):0;
   if(ok){score+=pts;correct++;}
   btns[item.correct].classList.add('revealed-correct');if(!ok)btns[i].classList.add('incorrect');
   record(ok);feedback(ok,pts,item.ex,false);
